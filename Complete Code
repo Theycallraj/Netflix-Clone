@@ -1,0 +1,274 @@
+# Netflix Clone Code Reference
+
+## Project Structure Overview
+```
+├── client/
+│   ├── src/
+│   │   ├── components/     # React components
+│   │   ├── pages/         # Page components
+│   │   ├── lib/           # Utilities and constants
+│   │   └── hooks/         # Custom React hooks
+├── server/
+│   ├── routes.ts          # Express routes
+│   └── storage.ts         # Data storage layer
+└── shared/
+    └── schema.ts          # Shared TypeScript types
+```
+
+## Key Components
+
+### Database Schema (schema.ts)
+```typescript
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { createInsertSchema } from "drizzle-zod";
+import { z } from "zod";
+
+export const movies = pgTable("movies", {
+  id: serial("id").primaryKey(),
+  title: text("title").notNull(),
+  description: text("description").notNull(),
+  posterUrl: text("poster_url").notNull(),
+  backdropUrl: text("backdrop_url"),
+  genre: text("genre").array().notNull(),
+  releaseYear: integer("release_year").notNull(),
+  duration: integer("duration").notNull(),
+  rating: text("rating").notNull(),
+  trailerUrl: text("trailer_url"),
+  featured: boolean("featured").default(false),
+});
+
+export const users = pgTable("users", {
+  id: serial("id").primaryKey(),
+  email: text("email").notNull().unique(),
+  password: text("password").notNull(),
+  name: text("name").notNull(),
+  myList: jsonb("my_list").default([]),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export type Movie = typeof movies.$inferSelect;
+export type InsertMovie = z.infer<typeof insertMovieSchema>;
+export type User = typeof users.$inferSelect;
+export type InsertUser = z.infer<typeof insertUserSchema>;
+```
+
+### Movie Components
+
+#### Hero Component (Hero.tsx)
+```typescript
+export function Hero({ movie, onPlay, onMoreInfo }: HeroProps) {
+  return (
+    <div className="relative h-[80vh] w-full overflow-hidden">
+      <div className="absolute inset-0">
+        <img
+          src={movie.backdropUrl}
+          alt={movie.title}
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent" />
+      </div>
+
+      <motion.div
+        className="relative h-full flex items-center container mx-auto px-4"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 }}
+      >
+        <div className="max-w-2xl">
+          <h1 className="text-5xl font-bold mb-4">{movie.title}</h1>
+          <p className="text-lg text-gray-200 mb-8">{movie.description}</p>
+          
+          <div className="flex gap-4">
+            <Button size="lg" onClick={onPlay}>
+              <Play className="h-5 w-5 mr-2" />
+              Play
+            </Button>
+            <Button size="lg" variant="outline" onClick={onMoreInfo}>
+              <Info className="h-5 w-5 mr-2" />
+              More Info
+            </Button>
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+```
+
+#### Movie Card Component (MovieCard.tsx)
+```typescript
+export function MovieCard({ movie, onPlay, onInfo }: MovieCardProps) {
+  return (
+    <motion.div
+      className="relative group cursor-pointer"
+      whileHover={{ scale: 1.05, zIndex: 1 }}
+      transition={{ duration: 0.2 }}
+    >
+      <div className="aspect-[2/3] rounded-md overflow-hidden">
+        <img
+          src={movie.posterUrl}
+          alt={movie.title}
+          className="w-full h-full object-cover"
+        />
+      </div>
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity">
+        <div className="absolute bottom-0 left-0 right-0 p-4">
+          <h3 className="text-lg font-semibold mb-2">{movie.title}</h3>
+          <div className="flex gap-2">
+            <Button size="sm" onClick={onPlay}>
+              <Play className="h-4 w-4 mr-2" />
+              Play
+            </Button>
+            <Button size="sm" variant="outline" onClick={onInfo}>
+              <Info className="h-4 w-4 mr-2" />
+              More Info
+            </Button>
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+```
+
+### Pages
+
+#### Home Page (home.tsx)
+```typescript
+export default function Home() {
+  const [selectedMovie, setSelectedMovie] = useState<Movie | null>(null);
+
+  const { data: movies, isLoading } = useQuery({
+    queryKey: ["/api/movies"],
+  });
+
+  const { data: featured } = useQuery({
+    queryKey: ["/api/movies/featured"],
+  });
+
+  if (isLoading || !movies) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="min-h-screen bg-background">
+      {featured && (
+        <Hero
+          movie={featured}
+          onPlay={() => setSelectedMovie(featured)}
+          onMoreInfo={() => setSelectedMovie(featured)}
+        />
+      )}
+
+      <div className="py-8">
+        <MovieRow
+          title="Trending Now"
+          movies={movies.slice(0, 8)}
+          onPlayMovie={setSelectedMovie}
+          onShowInfo={setSelectedMovie}
+        />
+
+        <MovieRow
+          title="Action Movies"
+          movies={getMoviesByCategory("Action")}
+          onPlayMovie={setSelectedMovie}
+          onShowInfo={setSelectedMovie}
+        />
+      </div>
+
+      <SubscriptionPlans />
+      <FAQ />
+      <Footer />
+
+      <MovieModal
+        movie={selectedMovie}
+        open={!!selectedMovie}
+        onClose={() => setSelectedMovie(null)}
+      />
+    </div>
+  );
+}
+```
+
+### Server Components
+
+#### Express Routes (routes.ts)
+```typescript
+export async function registerRoutes(app: Express): Promise<Server> {
+  app.get("/api/movies", async (_req, res) => {
+    try {
+      const movies = await storage.getMovies();
+      res.json(movies);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch movies" });
+    }
+  });
+
+  app.get("/api/movies/featured", async (_req, res) => {
+    try {
+      const featured = await storage.getFeaturedMovie();
+      res.json(featured);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch featured movie" });
+    }
+  });
+
+  app.get("/api/movies/:id", async (req, res) => {
+    try {
+      const movie = await storage.getMovie(parseInt(req.params.id));
+      if (!movie) {
+        return res.status(404).json({ message: "Movie not found" });
+      }
+      res.json(movie);
+    } catch (error) {
+      res.status(500).json({ message: "Failed to fetch movie" });
+    }
+  });
+
+  const httpServer = createServer(app);
+  return httpServer;
+}
+```
+
+### Styling
+
+#### Netflix Logo CSS (index.css)
+```css
+.netflix-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: bold;
+  background: linear-gradient(to bottom, #E50914 0%, #B20710 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.netflix-logo:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to bottom, #F40612 0%, #E50914 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+```
+
+## Running the Project
+
+1. Install dependencies:
+```bash
+npm install
+```
+
+2. Start the development server:
+```bash
+npm run dev
+```
+
+The application will be available at `http://localhost:5000`
+
+For more detailed information about the project structure, installation, and features, please refer to the README.md file.
