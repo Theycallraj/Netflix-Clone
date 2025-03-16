@@ -1,0 +1,221 @@
+/* Base Styles */
+:root {
+  --primary: hsl(357, 92%, 47%);
+  --background: hsl(0, 0%, 0%);
+  --foreground: hsl(0, 0%, 100%);
+  --muted: hsl(0, 0%, 40%);
+  --border: hsl(0, 0%, 20%);
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+/* Netflix Logo */
+.netflix-logo {
+  font-family: 'Bebas Neue', sans-serif;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  font-size: 2rem;
+  font-weight: bold;
+  background: linear-gradient(to bottom, #E50914 0%, #B20710 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.netflix-logo:hover {
+  transform: scale(1.05);
+  background: linear-gradient(to bottom, #F40612 0%, #E50914 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* Navigation */
+.nav-link {
+  color: var(--foreground);
+  text-decoration: none;
+  font-size: 0.875rem;
+  transition: color 0.2s;
+}
+
+.nav-link:hover {
+  color: var(--primary);
+}
+
+/* Search */
+.search-container {
+  position: relative;
+}
+
+.search-input {
+  width: 200px;
+  padding: 0.5rem 2.5rem 0.5rem 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--foreground);
+}
+
+.search-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--muted);
+}
+
+/* Hero Section */
+.hero-section {
+  position: relative;
+  height: 80vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.hero-section::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, var(--background) 0%, transparent 50%, transparent 100%);
+}
+
+/* Movie Rows */
+.movie-row {
+  margin: 2rem 0;
+}
+
+.movie-slider {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  padding: 1rem 0;
+}
+
+.movie-card {
+  flex: 0 0 auto;
+  width: 200px;
+  margin-right: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+/* Subscription Plans */
+.subscription-section {
+  padding: 4rem 0;
+  background: linear-gradient(to bottom, transparent, var(--background) 10%);
+}
+
+.plans-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+}
+
+/* FAQ Section */
+.faq-section {
+  padding: 4rem 0;
+}
+
+.faq-item {
+  margin-bottom: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+.faq-question {
+  padding: 1rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.faq-answer {
+  padding: 0 1rem;
+  height: 0;
+  overflow: hidden;
+  transition: height 0.3s ease;
+}
+
+/* Footer */
+.site-footer {
+  padding: 3rem 0;
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.designer-name {
+  color: var(--primary);
+  font-weight: bold;
+}
+
+.designer-email,
+.netflix-email {
+  color: var(--foreground);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.designer-email:hover,
+.netflix-email:hover {
+  color: var(--primary);
+}
+
+/* Modal */
+.movie-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 100;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-section {
+    height: 60vh;
+  }
+
+  .search-input {
+    width: 150px;
+  }
+
+  .movie-card {
+    width: 150px;
+  }
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.slide-up {
+  animation: slideUp 0.5s ease forwards;
+}
