@@ -1,0 +1,15 @@
+/Netflix-Clone  
+│── index.html          # Main Page  
+│── styles.css          # Complete UI Styling  
+│── script.js           # Interactive Features & Animations  
+│── /assets             # Images & Icons  
+│── /auth               # Login & Signup Pages  
+│── /movie-details      # Dynamic Movie Popups  
+│── README.md           # Documentation  
+
+git init
+git add .
+git commit -m "Initial commit: Netflix Clone with React and Express"
+git branch -M main
+git remote add origin https://github.com/yourusername/netflix-clone.git
+git push -u origin main
