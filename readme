@@ -1,0 +1,21 @@
+ A fully functional Netflix clone with stylish UI, animations, and interactive features.
+
+ Features Included:
+✅ Modern Netflix-Style UI – Responsive and sleek design.
+✅ Movies in Sections – Categorized movie rows (Trending, Popular, Sci-Fi, etc.).
+✅ 3D Hover & Blur Effects – Interactive thumbnails with stylish animations.
+✅ Plans & Subscriptions Page – Displays Basic, Standard, and Premium plans.
+✅ FAQ Section – Expandable Frequently Asked Questions.
+✅ Movie Details Popup – Click on a movie to view trailer, description, and cast.
+✅ Search & Filters – Find movies by name, genre, or year.
+✅ Authentication System – Sign Up, Login, and Profile Management.
+✅ Dark Mode with Neon Glow – Cinematic experience with blurred backgrounds.
+✅ Fully Responsive – Works on desktop, tablet, and mobile screens.
+
+🛠️ Tech Stack:
+
+Frontend: HTML, CSS, JavaScript
+Styling: Tailwind CSS / Bootstrap (Optional)
+Animations: CSS3, JavaScript Hover & Scroll Effects
+Backend (Optional): Node.js, Firebase, MongoDB (for authentication & movie storage)
+API (Optional): TMDB API for real-time movie details
