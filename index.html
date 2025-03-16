@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netflix Clone</title>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-background text-foreground">
+    <!-- Navbar -->
+    <nav class="fixed top-0 w-full z-50 transition-colors duration-300" id="navbar">
+        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center gap-8">
+                <a href="/" class="netflix-logo">Netflix</a>
+                <div class="hidden md:flex items-center gap-6">
+                    <a href="/browse" class="nav-link">Browse</a>
+                    <a href="/tv-shows" class="nav-link">TV Shows</a>
+                    <a href="/movies" class="nav-link">Movies</a>
+                    <a href="/my-list" class="nav-link">My List</a>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-4">
+                <div class="search-container">
+                    <input type="search" placeholder="Search..." class="search-input">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <button class="icon-button">🔔</button>
+                <div class="user-menu">
+                    <button class="icon-button">👤</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <div class="hero-section" id="hero">
+        <!-- Hero content will be dynamically inserted -->
+    </div>
+
+    <!-- Movie Rows -->
+    <div class="movie-rows py-8">
+        <div class="movie-row" id="trending">
+            <h2>Trending Now</h2>
+            <div class="movie-slider"></div>
+        </div>
+
+        <div class="movie-row" id="action">
+            <h2>Action Movies</h2>
+            <div class="movie-slider"></div>
+        </div>
+
+        <div class="movie-row" id="scifi">
+            <h2>Sci-Fi Adventures</h2>
+            <div class="movie-slider"></div>
+        </div>
+    </div>
+
+    <!-- Subscription Plans -->
+    <section class="subscription-section">
+        <h2>Choose Your Plan</h2>
+        <div class="plans-container" id="plans"></div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <h2>Frequently Asked Questions</h2>
+        <div class="faq-container" id="faq"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="creator-info">
+                <p>Designed by: <span class="designer-name">Pruthviraj Chawan</span></p>
+                <p>Email: <a href="mailto:pruthvirajchawan65@gmail.com" class="designer-email">pruthvirajchawan65@gmail.com</a></p>
+            </div>
+            <div class="netflix-info">
+                <p>Contact Netflix: <a href="mailto:info@netflix.com" class="netflix-email">info@netflix.com</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Movie Modal -->
+    <div class="movie-modal" id="movieModal"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
